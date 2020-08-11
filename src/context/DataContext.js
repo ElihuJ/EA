@@ -25,7 +25,7 @@ const organiseData = (data) => {
 
       const labelObject = { name: band.recordLabel, bands: [bandObject] };
       const labelNames = organisedData.map((label) => label.name);
-      
+
       if (labelNames.includes(band.recordLabel)) {
         const labelFoundObject = organisedData.find(
           (label) => label.name === band.recordLabel
@@ -33,7 +33,15 @@ const organiseData = (data) => {
         const labelFoundIndex = organisedData.findIndex(
           (label) => label.name === band.recordLabel
         );
-        labelFoundObject.bands.push(bandObject);
+        if (labelFoundObject.name === bandObject.name) {
+          const newBandObject = {
+            name: bandObject.name,
+            festivals: [...labelFoundObject.festivals, bandObject.festivals],
+          };
+          labelFoundObject.bands.push(newBandObject);
+        } else {
+          labelFoundObject.bands.push(bandObject);
+        }
         organisedData.splice(labelFoundIndex, 1);
         organisedData.push(labelFoundObject);
       } else {
@@ -41,7 +49,7 @@ const organiseData = (data) => {
       }
     });
   });
-  organisedData.sort((a, b) => a.name.localeCompare(b.name))
+  organisedData.sort((a, b) => a.name.localeCompare(b.name));
   return organisedData;
 };
 
